@@ -1,0 +1,11 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Bazel run bb_scheduler:bb_scheduler" type="BlazeCommandRunConfigurationType" factoryName="Bazel Command" nameIsGenerated="true">
+    <blaze-settings handler-id="BlazeGoRunConfigurationHandlerProvider" blaze-command="run">
+      <blaze-target kind="go_binary">//cmd/bb_scheduler:bb_scheduler</blaze-target>
+      <blaze-user-exe-flag>external/com_github_buildbarn_bb_deployments/bare/config/bb-scheduler.json</blaze-user-exe-flag>
+    </blaze-settings>
+    <method v="2">
+      <option name="Blaze.BeforeRunTask" enabled="true" />
+    </method>
+  </configuration>
+</component>

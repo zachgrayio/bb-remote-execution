@@ -62,10 +62,26 @@ func main() {
 		log.Fatal("Failed to create blob access: ", err)
 	}
 
+	// need to create dir and set correct perms for this to work under `bazel run`
+	if err := os.Mkdir(workerConfiguration.BuildDirectoryPath, os.ModeDir); os.IsExist(err) {
+		chmodErr := os.Chmod(workerConfiguration.BuildDirectoryPath, 0777)
+		if chmodErr != nil {
+			log.Fatal("Failed to open build directory: ", chmodErr)
+		}
+	}
+
 	// Directories where builds take place.
 	buildDirectory, err := filesystem.NewLocalDirectory(workerConfiguration.BuildDirectoryPath)
 	if err != nil {
-		log.Fatal("Failed to open cache directory: ", err)
+		log.Fatal("Failed to open build directory: ", err)
+	}
+
+	// again need to create dir and set correct perms for this to work under `bazel run`
+	if err := os.Mkdir(workerConfiguration.CacheDirectoryPath, os.ModeDir); os.IsExist(err) {
+		chmodErr := os.Chmod(workerConfiguration.CacheDirectoryPath, 0777)
+		if chmodErr != nil {
+			log.Fatal("Failed to open cache directory: ", chmodErr)
+		}
 	}
 
 	// On-disk caching of content for efficient linking into build environments.

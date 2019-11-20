@@ -5,9 +5,9 @@ import (
 	"net"
 	"os"
 
+	"github.com/buildbarn/bb-remote-execution/pkg/configuration/bb_runner"
 	"github.com/buildbarn/bb-remote-execution/pkg/environment"
 	"github.com/buildbarn/bb-remote-execution/pkg/proto/runner"
-	"github.com/buildbarn/bb-remote-execution/pkg/configuration/bb_runner"
 	"github.com/buildbarn/bb-storage/pkg/filesystem"
 
 	"google.golang.org/grpc"
@@ -21,6 +21,14 @@ func main() {
 	runnerConfiguration, err := configuration.GetRunnerConfiguration(os.Args[1])
 	if err != nil {
 		log.Fatalf("Failed to read configuration from %s: %s", os.Args[1], err)
+	}
+
+	// need to create dir and set correct perms for this to work under `bazel run`
+	if err := os.Mkdir(runnerConfiguration.BuildDirectoryPath, os.ModeDir); os.IsExist(err) {
+		chmodErr := os.Chmod(runnerConfiguration.BuildDirectoryPath, 0777)
+		if chmodErr != nil {
+			log.Fatal("Failed to open build directory: ", chmodErr)
+		}
 	}
 
 	buildDirectory, err := filesystem.NewLocalDirectory(runnerConfiguration.BuildDirectoryPath)
