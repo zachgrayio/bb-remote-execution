@@ -29,6 +29,7 @@ go_library(
 go_binary(
     name = "bb_worker",
     embed = [":go_default_library"],
+    data = ["@com_github_buildbarn_bb_deployments//bare/config:config_json"],
     pure = "on",
     visibility = ["//visibility:public"],
 )
